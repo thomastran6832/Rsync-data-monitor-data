@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # Base directories
+<<<<<<< HEAD
 base_log_dir="/path/log"
+=======
+base_log_dir="/path/log/"
+>>>>>>> deb60f9 (update)
 today_log_dir="$base_log_dir/$(date +'%Y%m%d')"
 mkdir -p "$today_log_dir"
 
@@ -13,7 +17,11 @@ src_folder=(
 # Destination folder
 dest_folder="/path/destination"
 
+<<<<<<< HEAD
 PUSHGATEWAY_URL="<http://$domain:$port>"
+=======
+PUSHGATEWAY_URL="<http://$IP>:<$Port-pushgateway>"
+>>>>>>> deb60f9 (update)
 
 # Logging function with timestamp and log level
 log() {
@@ -60,7 +68,11 @@ for folder in "${src_folder[@]}"; do
   failed_count=0
   rsync_failed=0  # Default: No failure
   error_message="None"
+<<<<<<< HEAD
   job_name="$job_name"
+=======
+  job_name="<$job-name>"
+>>>>>>> deb60f9 (update)
   
   # Log start of process
   log "INFO" "Starting rsync process" "$log_file"
@@ -71,7 +83,7 @@ for folder in "${src_folder[@]}"; do
   push_metrics "rsync_active" "1" "$job_name"
   
   # Run rsync with progress monitoring and logging
-  rsync -avzh --progress --ignore-existing --exclude "*/2023/" --exclude "*/2024/" --stats "$folder" "$dest_folder" 2>&1 | 
+  rsync -avzh --progress --ignore-existing --exclude "*/path/" --exclude "*/path/" --stats "$folder" "$dest_folder" 2>&1 | 
   while IFS= read -r line; do
     if [[ "$line" == *"------Rsync data start------"* ]]; then
       log "INFO" "$line" "$log_file"
