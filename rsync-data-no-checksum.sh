@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # Base directories
-base_log_dir="/volume1/homes/nipt_review_app/"
+base_log_dir="/path/log"
 today_log_dir="$base_log_dir/$(date +'%Y%m%d')"
 mkdir -p "$today_log_dir"
 
 # Source folder
 src_folder=(
-  "/volume1/ID-NIPT/review_qc/NIPT"
+  "/path/source"
 )
 
 # Destination folder
-dest_folder="/volume1/ID-NIPT-Rsync/review_qc"
+dest_folder="/path/destination"
 
-PUSHGATEWAY_URL="http://172.16.28.13:9091"
+PUSHGATEWAY_URL="<http://$domain:$port>"
 
 # Logging function with timestamp and log level
 log() {
@@ -27,7 +27,7 @@ log() {
 push_metrics() {
     local metric_name="$1"
     local value="$2"
-    local job_name="nipt_review_app"
+    local job_name="$3"
 
     cat <<EOF | curl --data-binary @- "${PUSHGATEWAY_URL}/metrics/job/${job_name}"
 # TYPE ${metric_name} counter
@@ -37,7 +37,7 @@ EOF
 
 push_error_message() {
     local error_msg="$1"
-    local job_name="nipt_review_app"
+    local job_name="$2"
 
     # Encode error message to avoid issues in Prometheus (replace special chars)
     local encoded_msg=$(echo "$error_msg" | sed 's/"/\\"/g' | sed 's/ /_/g' | sed 's/:/_/g')
@@ -60,6 +60,7 @@ for folder in "${src_folder[@]}"; do
   failed_count=0
   rsync_failed=0  # Default: No failure
   error_message="None"
+  job_name="$job_name"
   
   # Log start of process
   log "INFO" "Starting rsync process" "$log_file"
